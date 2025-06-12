@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\Saldo;
+use App\Models\Tabungan;
+use App\Observers\SaldoObserver;
+use App\Observers\TabunganObserver;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +23,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Tabungan::observe(TabunganObserver::class);
+        Saldo::observe(SaldoObserver::class);
     }
 }

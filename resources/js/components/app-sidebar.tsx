@@ -4,7 +4,7 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { Key, LayoutGrid, UserRoundCog, Users } from 'lucide-react';
+import { Building2, ContactRound, CreditCard, DollarSign, HandCoins, Key, LayoutGrid, UserRoundCog, Users, WalletMinimal } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -13,6 +13,32 @@ const mainNavItems: NavItem[] = [
         href: 'dashboard',
         icon: LayoutGrid,
         permission: 'dashboard'
+    },
+];
+const master: NavItem[] = [
+    {
+        title: 'Satuan Kerja',
+        href: 'satuan-kerja.index',
+        icon: Building2,
+        permission: 'satuan-kerja-index'
+    },
+    {
+        title: 'Jenis Tabungan',
+        href: 'jenis-tabungan.index',
+        icon: CreditCard,
+        permission: 'jenis-tabungan-index'
+    },
+    {
+        title: 'Tempat Saldo',
+        href: 'tempat-saldo.index',
+        icon: WalletMinimal,
+        permission: 'tempat-saldo-index'
+    },
+    {
+        title: 'Anggota',
+        href: 'anggota.index',
+        icon: ContactRound,
+        permission: 'anggota-index'
     },
     {
         title: 'Managament Pengguna',
@@ -26,6 +52,32 @@ const mainNavItems: NavItem[] = [
             },
             {
                 title: 'Permission',
+                href: 'permission.index',
+                permission: 'permission-index',
+            },
+        ]
+    },
+];
+
+const transaksi: NavItem[] = [
+    {
+        title: 'Tabungan',
+        href: 'transaksi.tabungan.index',
+        icon: DollarSign,
+        permission: 'transaksi-tabungan-index'
+    },
+    {
+        title: 'Kredit',
+        href: '#',
+        icon: HandCoins,
+        items: [
+            {
+                title: 'Pinjaman',
+                href: 'role.index',
+                permission: 'role-index',
+            },
+            {
+                title: 'Angsuran',
                 href: 'permission.index',
                 permission: 'permission-index',
             },
@@ -66,6 +118,8 @@ export function AppSidebar() {
 
             <SidebarContent>
                 <NavMain items={mainNavItems} permissions={permissions} title="Dashboard" />
+                <NavMain items={master} permissions={permissions} title="Master" />
+                <NavMain items={transaksi} permissions={permissions} title="Transaksi" />
             </SidebarContent>
 
             <SidebarFooter>
