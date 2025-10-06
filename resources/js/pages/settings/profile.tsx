@@ -22,7 +22,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 type ProfileForm = {
     name: string;
-    email: string;
+    username: string;
 }
 
 export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: boolean; status?: string }) {
@@ -30,7 +30,7 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
 
     const { data, setData, patch, errors, processing, recentlySuccessful } = useForm<Required<ProfileForm>>({
         name: auth.user.name,
-        email: auth.user.email,
+        username: auth.user.username,
     });
 
     const submit: FormEventHandler = (e) => {
@@ -68,21 +68,21 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                         </div>
 
                         <div className="grid gap-2">
-                            <Label htmlFor="email">Email</Label>
+                            <Label htmlFor="username">username</Label>
 
                             <Input
-                                id="email"
-                                type="email"
+                                id="username"
+                                type="username"
                                 className="mt-1 block w-full"
-                                value={data.email}
-                                onChange={(e) => setData('email', e.target.value)}
+                                value={data.username}
+                                onChange={(e) => setData('username', e.target.value)}
                                 required
                                 autoComplete="username"
-                                placeholder="email@example.com"
+                                placeholder="username"
                                 readOnly
                             />
 
-                            <InputError className="mt-2" message={errors.email} />
+                            <InputError className="mt-2" message={errors.username} />
                         </div>
 
                         {mustVerifyEmail && auth.user.email_verified_at === null && (

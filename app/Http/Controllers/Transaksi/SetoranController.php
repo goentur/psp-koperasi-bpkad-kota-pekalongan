@@ -3,7 +3,11 @@
 namespace App\Http\Controllers\Transaksi;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Transaksi\Setoran\AngsuranRequest;
 use App\Http\Requests\Transaksi\Setoran\DataRequest;
+use App\Http\Requests\Transaksi\Setoran\PinjamanBaruRequest;
+use App\Http\Requests\Transaksi\Setoran\SetoranBaruRequest;
+use App\Http\Requests\Transaksi\Setoran\TabunganBaruRequest;
 use App\Repositories\Transaksi\SetoranRepository;
 use App\Support\Facades\Memo;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -49,8 +53,32 @@ class SetoranController extends Controller implements HasMiddleware
     //     back()->with('success', 'Data berhasil ditambahkan');
     // }
 
-    public function data(DataRequest $request)
+    public function dataTabungan(DataRequest $request)
     {
-        return response()->json($this->repository->data($request));
+        return response()->json($this->repository->dataTabungan($request));
+    }
+    public function tabunganBaru(TabunganBaruRequest $request)
+    {
+        $this->repository->tabunganBaru($request);
+        back()->with('success', 'Data berhasil ditambahkan');
+    }
+    public function setoranBaru(SetoranBaruRequest $request)
+    {
+        $this->repository->setoranBaru($request);
+        back()->with('success', 'Data berhasil ditambahkan');
+    }
+    public function dataPinjaman(DataRequest $request)
+    {
+        return response()->json($this->repository->dataPinjaman($request));
+    }
+    public function pinjamanBaru(PinjamanBaruRequest $request)
+    {
+        $this->repository->pinjamanBaru($request);
+        back()->with('success', 'Data berhasil ditambahkan');
+    }
+    public function angsuran(AngsuranRequest $request)
+    {
+        $this->repository->angsuran($request);
+        back()->with('success', 'Data berhasil ditambahkan');
     }
 }

@@ -19,7 +19,8 @@ class PinjamanDataResource extends JsonResource
             'id' => $this->id,
             'nominal' => 'Rp ' . Helpers::ribuan($this->nominal),
             'angsuran' => 'Rp ' . Helpers::ribuan($this->angsuran->sum('nominal')),
-            'jangka_waktu' => $this->jangka_waktu . ' bulan',
+            'jangka_waktu' => $this->jangka_waktu . ' Bulan',
+            'jumlah_angsuran' => $this->angsuran->count() . 'X',
         ];
     }
 }

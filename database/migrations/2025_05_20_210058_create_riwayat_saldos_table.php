@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('riwayat_saldos', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('tempat_saldo_id')->nullable();
+            $table->bigInteger('saldo_id')->nullable();
             $table->string('kode_refrensi')->nullable();
             $table->string('tipe')->nullable();
             $table->bigInteger('nominal')->nullable();

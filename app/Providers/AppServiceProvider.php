@@ -2,8 +2,12 @@
 
 namespace App\Providers;
 
+use App\Models\Angsuran;
+use App\Models\Pinjaman;
 use App\Models\Saldo;
 use App\Models\Tabungan;
+use App\Observers\AngsuranObserver;
+use App\Observers\PinjamanObserver;
 use App\Observers\SaldoObserver;
 use App\Observers\TabunganObserver;
 use Illuminate\Support\ServiceProvider;
@@ -25,5 +29,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Tabungan::observe(TabunganObserver::class);
         Saldo::observe(SaldoObserver::class);
+        Angsuran::observe(AngsuranObserver::class);
+        Pinjaman::observe(PinjamanObserver::class);
     }
 }

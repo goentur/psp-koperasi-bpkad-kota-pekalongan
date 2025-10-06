@@ -61,28 +61,11 @@ const master: NavItem[] = [
 
 const transaksi: NavItem[] = [
     {
-        title: 'Tabungan',
-        href: 'transaksi.tabungan.index',
+        title: 'Setoran',
+        href: 'transaksi.setoran.index',
         icon: DollarSign,
-        permission: 'transaksi-tabungan-index'
-    },
-    {
-        title: 'Kredit',
-        href: '#',
-        icon: HandCoins,
-        items: [
-            {
-                title: 'Pinjaman',
-                href: 'role.index',
-                permission: 'role-index',
-            },
-            {
-                title: 'Angsuran',
-                href: 'permission.index',
-                permission: 'permission-index',
-            },
-        ]
-    },
+        permission: 'transaksi-setoran-index'
+    }
 ];
 
 const footerNavItems: NavItem[] = [
