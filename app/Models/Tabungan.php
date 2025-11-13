@@ -15,4 +15,14 @@ class Tabungan extends Model
     {
         return $this->belongsTo(JenisTabungan::class);
     }
+
+    public function setTanggalRequestAttribute($value)
+    {
+        $this->tanggal_request = $value;
+    }
+
+    public function getTanggalRequestAttribute()
+    {
+        return $this->tanggal_request;
+    }
 }

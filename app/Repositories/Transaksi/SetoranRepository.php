@@ -38,6 +38,7 @@ class SetoranRepository
         $tabungan = Tabungan::select('id', 'nominal', 'anggota_id')->where(['anggota_id' => $request->anggota, 'jenis_tabungan_id' => $request->jenisTabungan])->first();
 
         if ($tabungan) {
+            $tabungan->tanggal_request = $request->tanggal;
             return $tabungan->update([
                 'nominal' => $tabungan->nominal + $request->nominal,
             ]);

@@ -18,7 +18,7 @@ class TabunganDataResource extends JsonResource
         return [
             'id' => $this->id,
             'jenis_tabungan' => $this->jenis_tabungan_id,
-            'tabungan' => $this->jenisTabungan->nama,
+            'tabungan' => $this->jenisTabungan?->nama,
             'nominal' => 'Rp ' . Helpers::ribuan($this->nominal),
         ];
     }

@@ -3,7 +3,6 @@
 namespace App\Observers;
 
 use App\Models\Angsuran;
-use App\Models\Pinjaman;
 use App\Models\Saldo;
 use App\Support\KodeRefresnsiRiwayatSaldo;
 use App\Support\SaldoContext;

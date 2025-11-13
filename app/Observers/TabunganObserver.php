@@ -31,7 +31,7 @@ class TabunganObserver
             'tabungan_id' => $tabungan->id,
             'nomor' => $kodeRefrensi,
             'nominal' => $tabungan->nominal,
-            'tanggal' => now(),
+            'tanggal' => $tabungan->tanggal_pendaftaran,
             'tipe' => $tipe,
             'keterangan' => 'SALDO AWAL',
         ]);
@@ -57,11 +57,12 @@ class TabunganObserver
                 KodeRefresnsiRiwayatSaldo::clear();
             }
             $tipe = $selisih >= 0 ? RiwayatTabunganTipe::MASUK : RiwayatTabunganTipe::KELUAR;
+            $tanggal = $tabungan->tanggal_request ? \Carbon\Carbon::parse($tabungan->tanggal_request)->timezone('Asia/Jakarta') : now()->timezone('Asia/Jakarta');
             RiwayatTabungan::create([
                 'tabungan_id' => $tabungan->id,
                 'nomor' => $kodeRefrensi,
                 'nominal' => abs($selisih),
-                'tanggal' => now(),
+                'tanggal' => $tanggal,
                 'tipe' => $tipe,
                 'keterangan' => 'SALDO ' . $tipe->value,
             ]);

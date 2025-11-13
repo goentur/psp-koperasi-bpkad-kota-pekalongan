@@ -1,3 +1,4 @@
+import FormCalendar from '@/components/form-calendar'
 import FormInputCurrency from '@/components/form-input-currency'
 import { Button } from '@/components/ui/button'
 import {
@@ -22,6 +23,7 @@ export default function FormSetoranBaru({ open, setOpen, onChange, model}: props
     const { data, setData, post, reset, errors, clearErrors, processing } = useForm({
         anggota : '',
         jenisTabungan : '',
+        tanggal : new Date(),
         nominal : ''
     })
     const formRefs = useRef<Record<string, HTMLInputElement | null>>({})
@@ -62,17 +64,30 @@ export default function FormSetoranBaru({ open, setOpen, onChange, model}: props
                         <DialogDescription className='italic'>"Silakan isi formulir di bawah ini dengan lengkap dan benar"</DialogDescription>
                     </DialogHeader>
                     <div className="mt-5 mb-2">
-                        <FormInputCurrency
-                            id="nominal"
-                            type="text"
-                            value={data.nominal}
-                            onChange={(value, floatValue) => setData((prevData: any) => ({ ...prevData, nominal: floatValue }))}
-                            inputRef={(el) => {if (formRefs.current) {formRefs.current['nominal'] = el}}}
-                            placeholder="Masukkan nominal"
-                            error={errors.nominal}
-                            autoComplete='off'
-                            required
-                        />
+                        <div className="grid grid-cols-2 gap-2 mt-2">
+                            <FormCalendar
+                                id="tanggal"
+                                value={data.tanggal}
+                                onChange={(e) => setData((prevData: any) => ({ ...prevData, tanggal: e }))}
+                                inputRef={(el) => {if (formRefs.current) {formRefs.current['tanggal'] = el}}}
+                                placeholder="Pilih tanggal pembayaran"
+                                error={errors.tanggal}
+                                required
+                                autoComplete='off'
+                                tanggalSelanjutnya={false}
+                            />
+                            <FormInputCurrency
+                                id="nominal"
+                                type="text"
+                                value={data.nominal}
+                                onChange={(value, floatValue) => setData((prevData: any) => ({ ...prevData, nominal: floatValue }))}
+                                inputRef={(el) => {if (formRefs.current) {formRefs.current['nominal'] = el}}}
+                                placeholder="Masukkan nominal"
+                                error={errors.nominal}
+                                autoComplete='off'
+                                required
+                            />
+                        </div>
                     </div>
                     <DialogFooter>
                         <div className="flex items-center mt-5">

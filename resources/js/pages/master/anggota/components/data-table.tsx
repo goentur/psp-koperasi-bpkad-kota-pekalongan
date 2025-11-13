@@ -42,10 +42,10 @@ export default function DataTable({ gate, loading, data, from, setForm, setIsEdi
                             className="hover:bg-gray-100 dark:hover:bg-slate-900 align-text-top"
                         >
                             <td className="px-2 py-1 border text-center">{from++}</td>
-                            <td className="px-2 py-1 w-1 border">{value.nik}</td>
-                            <td className="px-2 py-1 border">{value.nama}</td>
-                            <td className="px-2 py-1 border">{value.status_kepegawaian}</td>
-                            <td className="px-2 py-1 border">{value.satuan_kerja.nama}</td>
+                            <td className="px-2 py-1 w-1 border">{value?.nik}</td>
+                            <td className="px-2 py-1 border">{value?.nama}</td>
+                            <td className="px-2 py-1 border">{value?.status_kepegawaian}</td>
+                            <td className="px-2 py-1 border">{value?.satuan_kerja?.nama}</td>
                             <td className="border text-center">
                                 <DropdownMenu>
                                     <DropdownMenuTrigger className="px-2 py-1">
