@@ -25,8 +25,8 @@ class SetoranBaruRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'anggota' => 'required|' . Rule::exists(Anggota::class, 'id'),
-            'jenisTabungan' => 'required|' . Rule::exists(JenisTabungan::class, 'id'),
+            'anggota' => 'required',
+            'jenisTabungan' => 'required',
             'tanggal' => 'required|date',
             'nominal' => 'required|numeric',
         ];

@@ -6,14 +6,35 @@ use App\Enums\PinjamanStatus;
 use App\Http\Resources\Transaksi\Setoran\PinjamanDataResource;
 use App\Http\Resources\Transaksi\Setoran\TabunganDataResource;
 use App\Models\Angsuran;
+use App\Models\New\SPenganturanAkun;
+use App\Models\New\TSimpanan;
+use App\Models\New\TTransDetail;
+use App\Models\New\TTransMaster;
+use App\Models\New\TTransSimpanan;
 use App\Models\Pinjaman;
 use App\Models\Tabungan;
+use App\Support\Facades\Helpers;
+use Illuminate\Support\Facades\DB;
 
 class SetoranRepository
 {
     public function dataTabungan($request)
     {
-        $tabungan = Tabungan::with('jenisTabungan')->select('id', 'jenis_tabungan_id', 'nominal')->where('anggota_id', $request->id)->latest()->get();
+        $tabungan = TSimpanan::with([
+            'SProdSimpanan',
+            'TTransSimpanan' => function ($query) {
+                $query->select('id', 'simpanan_id', 'nominal'); // Pastikan field ini ada di tabel t_trans_simpanan
+            }
+        ])
+            ->select('id', 's_prod_simpanan_id', 'no_rekening', 'anggota_id') // Sertakan anggota_id agar where berfungsi
+            ->where('anggota_id', $request->id)
+            ->latest()
+            ->get()
+            ->map(function ($tabungan) {
+                $totalNominal = $tabungan->TTransSimpanan->sum('nominal');
+                $tabungan->total_simpanan = $totalNominal;
+                return $tabungan;
+            });
         return TabunganDataResource::collection($tabungan);
     }
 
@@ -24,7 +45,7 @@ class SetoranRepository
         if ($tabungan) {
             return back()->withErrors(['jenisTabungan' => 'Tabungan untuk jenis ini sudah ada.']);
         }
-
+        return null;
         return Tabungan::create([
             'anggota_id' => $request->anggota,
             'jenis_tabungan_id' => $request->jenisTabungan,
@@ -35,15 +56,64 @@ class SetoranRepository
 
     public function setoranBaru($request)
     {
-        $tabungan = Tabungan::select('id', 'nominal', 'anggota_id')->where(['anggota_id' => $request->anggota, 'jenis_tabungan_id' => $request->jenisTabungan])->first();
+        try {
+            DB::transaction(function () use ($request) {
+                $tanggal = $request->tanggal
+                    ? \Carbon\Carbon::parse($request->tanggal)->timezone('Asia/Jakarta')
+                    : now()->timezone('Asia/Jakarta');
 
-        if ($tabungan) {
-            $tabungan->tanggal_request = $request->tanggal;
-            return $tabungan->update([
-                'nominal' => $tabungan->nominal + $request->nominal,
-            ]);
+                $simpanan = TSimpanan::findOrFail($request->jenisTabungan);
+
+                $pengaturanAkun = SPenganturanAkun::where([
+                    'kode_trans' => '01',
+                    's_prod_id' => $simpanan->s_prod_simpanan_id
+                ])->get();
+
+                if ($pengaturanAkun->isEmpty()) {
+                    throw new \Exception('Pengaturan akun tidak ditemukan untuk produk simpanan ini.');
+                }
+
+                $TTransSimpanan = TTransSimpanan::create([
+                    'simpanan_id' => $request->jenisTabungan,
+                    'kode_trans' => '01',
+                    'tgl_trans' => $tanggal,
+                    'jenis_trans' => '01',
+                    'nominal' => $request->nominal,
+                    'keterangan' => 'Setoran tanggal ' . $tanggal,
+                ]);
+
+                $TransMaster = TTransMaster::create([
+                    'module_source' => 'simpanan',
+                    'trans_id' => $TTransSimpanan->id,
+                    'tgl_trans' => $tanggal,
+                    'keterangan' => 'Setoran tanggal ' . $tanggal,
+                ]);
+
+                foreach ($pengaturanAkun as $value) {
+                    // Debet
+                    TTransDetail::create([
+                        'trans_master_id' => $TransMaster->id,
+                        'akun_id' => $value->debet_akun_id,
+                        'debet' => $request->nominal,
+                        'kredit' => 0,
+                        'keterangan' => 'Setoran tanggal ' . $tanggal,
+                    ]);
+
+                    // Kredit
+                    TTransDetail::create([
+                        'trans_master_id' => $TransMaster->id,
+                        'akun_id' => $value->kredit_akun_id,
+                        'debet' => 0,
+                        'kredit' => $request->nominal,
+                        'keterangan' => 'Setoran tanggal ' . $tanggal,
+                    ]);
+                }
+            });
+            return response()->json(['message' => 'Transaksi berhasil disimpan.'], 200);
+        } catch (\Exception $e) {
+            // Gagal
+            return response()->json(['error' => $e->getMessage()], 422);
         }
-        return back()->withErrors(['nominal' => 'Data tabungan tidak diketahui.']);
     }
 
     public function dataPinjaman($request)

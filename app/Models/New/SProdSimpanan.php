@@ -11,6 +11,7 @@ class SProdSimpanan extends Model
     use SoftDeletes, HasUsersTamps;
     protected $primaryKey = 'id';
     public $incrementing = false;
+    public $keyType = 'char';
     protected $fillable = ['id', 'nama', 'admin', 'bunga', 'keterangan'];
     protected $table = 's_prod_simpanan';
 }

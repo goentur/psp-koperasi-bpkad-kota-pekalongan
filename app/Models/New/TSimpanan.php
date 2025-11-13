@@ -16,4 +16,9 @@ class TSimpanan extends Model
     {
         return $this->hasMany(TTransSimpanan::class, 'simpanan_id', 'id');
     }
+
+    public function SProdSimpanan()
+    {
+        return $this->belongsTo(SProdSimpanan::class, 's_prod_simpanan_id', 'id');
+    }
 }

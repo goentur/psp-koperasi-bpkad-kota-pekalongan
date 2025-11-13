@@ -4,6 +4,7 @@ namespace App\Repositories\Master;
 
 use App\Http\Resources\Master\Anggota\SelectOptionResource;
 use App\Models\Anggota;
+use App\Models\New\SAnggota;
 use App\Models\Tabungan;
 use Illuminate\Support\Facades\DB;
 
@@ -78,7 +79,7 @@ class AnggotaRepository
 
     public function list($request)
     {
-        $query = $this->model::with('satuanKerja')->select('id', 'nama', 'satuan_kerja_id');
+        $query = SAnggota::with('satuanKerja')->select('id', 'nama', 'bidang');
         if ($request->id && $request->search == '') {
             $data = $query->where('id', $request->id)->get();
         } elseif ($request->search) {
