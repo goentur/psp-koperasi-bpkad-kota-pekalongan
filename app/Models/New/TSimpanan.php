@@ -11,4 +11,9 @@ class TSimpanan extends Model
     use SoftDeletes, HasUsersTamps;
     protected $fillable = ['anggota_id', 's_prod_simpanan_id', 'no_rekening', 'tgl_daftar'];
     protected $table = 't_simpanan';
+
+    public function TTransSimpanan()
+    {
+        return $this->hasMany(TTransSimpanan::class, 'simpanan_id', 'id');
+    }
 }

@@ -11,4 +11,8 @@ class TPinjaman extends Model
     use SoftDeletes, HasUsersTamps;
     protected $fillable = ['anggota_id', 's_prod_pinjaman_id', 'no_rekening', 'tgl_pencairan', 'plafon', 'jangka_waktu'];
     protected $table = 't_pinjaman';
+    public function TTransPinjaman()
+    {
+        return $this->hasMany(TTransPinjaman::class, 'pinjaman_id', 'id');
+    }
 }
