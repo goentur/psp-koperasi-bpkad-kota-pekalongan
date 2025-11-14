@@ -17,7 +17,9 @@ class DashboardController extends Controller
     }
     public function dataAnggotaDashboard()
     {
-        $anggotaDenganTotalSimpanan = SAnggota::with(['TSimpanan.TTransSimpanan', 'TPinjaman.TTransPinjaman', 'satuanKerja']) // Eager load relasi
+        $anggotaDenganTotalSimpanan = SAnggota::with(['TSimpanan.TTransSimpanan', 'TPinjaman', 'TPinjaman.TTransPinjaman', 'TPinjaman.TTransPinjamanSaldoAwal', 'satuanKerja']) // Eager load relasi
+            ->orderBy('bidang')
+            ->orderBy('nama')
             ->get()
             ->map(function ($anggota) {
                 $totalNominal = 0;
@@ -25,12 +27,13 @@ class DashboardController extends Controller
                     $totalNominal += $simpanan->TTransSimpanan->sum('nominal');
                 }
                 $totalNominalPinjaman = 0;
+                $totalNominalPinjamanAngsuran = 0;
                 foreach ($anggota->TPinjaman as $simpanan) {
-                    $totalNominalPinjaman += $simpanan->TTransPinjaman->sum('nominal');
+                    $totalNominalPinjamanAngsuran += $simpanan->TTransPinjaman->sum('nominal');
+                    $totalNominalPinjaman = $simpanan->TTransPinjamanSaldoAwal->sum('nominal');
                 }
-                $anggota->tanggal = Carbon::parse($anggota->tgl_daftar, 'Asia/Jakarta')->isoFormat('D MMM Y');
                 $anggota->total_simpanan_all = Helpers::ribuan($totalNominal);
-                $anggota->total_pinjaman_all = Helpers::ribuan($totalNominalPinjaman);
+                $anggota->total_pinjaman_all = Helpers::ribuan($totalNominalPinjaman - $totalNominalPinjamanAngsuran);
                 return $anggota;
             });
         return response()->json($anggotaDenganTotalSimpanan);

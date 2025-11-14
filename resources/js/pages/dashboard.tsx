@@ -117,8 +117,6 @@ export default function Dashboard() {
                             <th className="p-2 border w-[1px]">NO</th>
                             <th className="p-2 border">NIK</th>
                             <th className="p-2 border">NAMA</th>
-                            <th className="p-2 border">TANGGAL DAFTAR</th>
-                            <th className="p-2 border">STATUS KEPEGAWAIAN</th>
                             <th className="p-2 border">BIDANG</th>
                             <th className="p-2 border w-1">SIMPANAN</th>
                             <th className="p-2 border w-1">PINJAMAN</th>
@@ -135,8 +133,6 @@ export default function Dashboard() {
                                     <td className="px-2 py-1 border text-center">{++index}</td>
                                     <td className="px-2 py-1 w-1 border">{value?.nik}</td>
                                     <td className="px-2 py-1 border">{value?.nama}</td>
-                                    <td className="px-2 py-1 border">{value?.tanggal}</td>
-                                    <td className="px-2 py-1 border">{value?.status_kepegawaian}</td>
                                     <td className="px-2 py-1 border">{value?.satuan_kerja?.nama}</td>
                                     <td className="px-2 py-1 border text-end">{value?.total_simpanan_all}</td>
                                     <td className="px-2 py-1 border text-end">{value?.total_pinjaman_all}</td>
