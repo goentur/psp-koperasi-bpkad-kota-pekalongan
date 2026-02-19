@@ -10,7 +10,7 @@ class Pinjaman extends Model
 {
     use SoftDeletes, HasUsersTamps;
     protected $guarded = ['id'];
-    protected $table = 'pinjaman';
+    protected $table = 't_pinjaman';
 
     public function angsuran()
     {

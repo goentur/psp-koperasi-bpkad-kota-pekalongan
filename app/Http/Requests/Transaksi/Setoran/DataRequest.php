@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Transaksi\Setoran;
 
-use App\Models\Anggota;
+use App\Models\New\SAnggota;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -24,7 +24,7 @@ class DataRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => 'required|numeric|' . Rule::exists(Anggota::class, 'id'),
+            'id' => 'required|numeric|' . Rule::exists(SAnggota::class, 'id'),
         ];
     }
 }

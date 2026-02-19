@@ -18,12 +18,12 @@ class PinjamanDataResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'nominal' => 'Rp ' . Helpers::ribuan($this->nominal),
-            'angsuran' => 'Rp ' . Helpers::ribuan($this->angsuran->sum('nominal')),
-            'kekurangan' => 'Rp ' . Helpers::ribuan($this->nominal - $this->angsuran->sum('nominal')),
-            'last_transaction_date' => Carbon::parse($this->angsuran->max('tanggal_pembayaran'))->isoFormat('D MMMM YYYY'),
+            'nominal' => 'Rp ' . Helpers::ribuan($this->plafon),
+            'angsuran' => 'Rp ' . Helpers::ribuan($this->TTransPinjaman->sum('nominal')),
+            'kekurangan' => 'Rp ' . Helpers::ribuan($this->plafon - $this->TTransPinjaman->sum('nominal')),
+            'last_transaction_date' => Carbon::parse($this->TTransPinjaman->max('tgl_trans'))->isoFormat('D MMMM YYYY'),
             'jangka_waktu' => $this->jangka_waktu . ' Bulan',
-            'jumlah_angsuran' => $this->angsuran->count() . 'X',
+            'jumlah_angsuran' => $this->TTransPinjaman->count() . 'X',
         ];
     }
 }
