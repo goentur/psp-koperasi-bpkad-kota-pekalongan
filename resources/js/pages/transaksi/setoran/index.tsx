@@ -159,6 +159,12 @@ export default function Index({ gate }: IndexGate) {
                                                             {value.angsuran}
                                                         </span>
                                                     </div>
+                                                    <div className="flex flex-col space-y-1">
+                                                        <span className="text-xs text-gray-500 dark:text-gray-400">Kekurangan</span>
+                                                        <span className="text-xl font-bold text-red-600 dark:text-red-500">
+                                                            {value.kekurangan}
+                                                        </span>
+                                                    </div>
                                                 </div>
 
                                                 <div className="border-t border-gray-100 dark:border-gray-700 pt-3 space-y-1">
