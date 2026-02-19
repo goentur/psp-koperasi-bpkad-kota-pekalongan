@@ -108,7 +108,13 @@ export default function Index({ gate }: IndexGate) {
                                                 <p className="text-2xl font-bold text-green-600 dark:text-green-500">
                                                 {value.nominal}
                                                 </p>
-                                                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Saldo tersedia</p>
+                                                <div className="flex justify-between items-center">
+                                                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Saldo tersedia</p>
+                                                </div>
+                                                <div className="flex justify-between items-center">
+                                                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Tanggal Setoran Terakhir</p>
+                                                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{value.last_transaction_date}</p>
+                                                </div>
                                             </CardContent>
                                         </Card>
                                     ))}
@@ -163,6 +169,10 @@ export default function Index({ gate }: IndexGate) {
                                                     <div className="flex justify-between items-center">
                                                         <span className="text-sm">Jumlah Angsuran</span>
                                                         <span className="font-medium">{value.jumlah_angsuran}</span>
+                                                    </div>
+                                                    <div className="flex justify-between items-center">
+                                                        <span className="text-sm">Tanggal Angsuran Terakhir</span>
+                                                        <span className="font-medium">{value.last_transaction_date}</span>
                                                     </div>
                                                 </div>
                                             </CardContent>

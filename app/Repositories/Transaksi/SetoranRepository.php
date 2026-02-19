@@ -20,21 +20,14 @@ class SetoranRepository
 {
     public function dataTabungan($request)
     {
-        $tabungan = TSimpanan::with([
-            'SProdSimpanan',
-            'TTransSimpanan' => function ($query) {
-                $query->select('id', 'simpanan_id', 'nominal'); // Pastikan field ini ada di tabel t_trans_simpanan
-            }
-        ])
-            ->select('id', 's_prod_simpanan_id', 'no_rekening', 'anggota_id') // Sertakan anggota_id agar where berfungsi
+        $tabungan = TSimpanan::with(['SProdSimpanan', 'TTransSimpanan' => function ($query) {
+            $query->select('id', 'simpanan_id', 'tgl_trans', 'nominal');
+        }])
+            ->select('id', 's_prod_simpanan_id', 'no_rekening', 'anggota_id')
             ->where('anggota_id', $request->id)
             ->latest()
-            ->get()
-            ->map(function ($tabungan) {
-                $totalNominal = $tabungan->TTransSimpanan->sum('nominal');
-                $tabungan->total_simpanan = $totalNominal;
-                return $tabungan;
-            });
+            ->get();
+
         return TabunganDataResource::collection($tabungan);
     }
 
