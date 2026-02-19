@@ -131,13 +131,16 @@ class SetoranRepository
     {
         $pinjaman = Pinjaman::find($request->pinjaman);
         $angsuran = $pinjaman->angsuran->count() + 1;
+        $tanggal = $request->tanggalPembayaran
+            ? \Carbon\Carbon::parse($request->tanggalPembayaran)->timezone('Asia/Jakarta')
+            : now()->timezone('Asia/Jakarta');
         return Angsuran::create([
             'pinjaman_id' => $request->pinjaman,
             'nomor' => 'A-' . $pinjaman->anggota_id . '-' . $request->pinjaman,
             'nominal' => $request->nominal,
-            'tanggal_pembayaran' => $request->tanggalPembayaran,
+            'tanggal_pembayaran' => $tanggal,
             'bulan_ke' => $angsuran,
-            'keterangan' => "Angsuran ke " . $angsuran . " untuk pinjaman dengan nominal " . $pinjaman->nominal . " pada tanggal " . $request->tanggalPembayaran,
+            'keterangan' => "Angsuran ke " . $angsuran . " untuk pinjaman dengan nominal " . $pinjaman->nominal . " pada tanggal " . $tanggal,
         ]);
     }
 }

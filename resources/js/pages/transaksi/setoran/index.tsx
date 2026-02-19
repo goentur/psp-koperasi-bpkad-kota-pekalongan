@@ -148,7 +148,7 @@ export default function Index({ gate }: IndexGate) {
                                             <CardContent className="space-y-4 pt-3 text-sm text-gray-600 dark:text-gray-400">
                                                 <div className="grid grid-cols-2 gap-4">
                                                     <div className="flex flex-col space-y-1">
-                                                        <span className="text-xs text-gray-500 dark:text-gray-400">Nominal</span>
+                                                        <span className="text-xs text-gray-500 dark:text-gray-400">Pinjaman</span>
                                                         <span className="text-xl font-bold text-red-600 dark:text-red-500">
                                                             {value.nominal}
                                                         </span>
@@ -160,7 +160,7 @@ export default function Index({ gate }: IndexGate) {
                                                         </span>
                                                     </div>
                                                     <div className="flex flex-col space-y-1">
-                                                        <span className="text-xs text-gray-500 dark:text-gray-400">Kekurangan</span>
+                                                        <span className="text-xs text-gray-500 dark:text-gray-400">Sisa Pinjaman</span>
                                                         <span className="text-xl font-bold text-red-600 dark:text-red-500">
                                                             {value.kekurangan}
                                                         </span>
