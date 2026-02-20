@@ -14,7 +14,12 @@ class TSimpanan extends Model
 
     public function TTransSimpanan()
     {
-        return $this->hasMany(TTransSimpanan::class, 'simpanan_id', 'id');
+        return $this->hasMany(TTransSimpanan::class, 'simpanan_id', 'id')->whereIn('jenis_trans', ['01', '03', '05', '07', '09']);
+    }
+
+    public function TTransTarik()
+    {
+        return $this->hasMany(TTransSimpanan::class, 'simpanan_id', 'id')->whereIn('jenis_trans', ['02', '04', '06', '08']);
     }
 
     public function SProdSimpanan()

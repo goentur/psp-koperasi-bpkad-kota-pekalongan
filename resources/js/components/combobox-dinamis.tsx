@@ -108,7 +108,7 @@ export default function ComboboxDinamis({ label,selectedValue,fetchOptions,onSel
                                             key={d.value}
                                             value={d.label}
                                             onSelect={() => {
-                                                onSelect(d.value, search);
+                                                onSelect(d.value, d.label);
                                                 setOpen(false);
                                             }}
                                         >

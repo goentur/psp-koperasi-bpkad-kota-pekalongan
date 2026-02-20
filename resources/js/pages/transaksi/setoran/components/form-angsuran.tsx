@@ -28,7 +28,7 @@ export default function FormAngsuran({ open, setOpen, onChange, model}: props) {
     const formRefs = useRef<Record<string, HTMLInputElement | null>>({})
     const handleForm = (e: React.FormEvent) => {
         e.preventDefault()
-        post(route('transaksi.setoran.angsuran'), {
+        post(route('transaksi.angsuran'), {
             preserveScroll: true,
             onSuccess: (e) => {
                 clearErrors()

@@ -31,7 +31,7 @@ export default function FormTabunganBaru({ open, setOpen, onChange, model}: prop
     const formRefs = useRef<Record<string, HTMLInputElement | null>>({})
     const handleForm = (e: React.FormEvent) => {
         e.preventDefault()
-        post(route('transaksi.setoran.tabungan-baru'), {
+        post(route('transaksi.tabungan-baru'), {
             preserveScroll: true,
             onSuccess: (e) => {
                 clearErrors()

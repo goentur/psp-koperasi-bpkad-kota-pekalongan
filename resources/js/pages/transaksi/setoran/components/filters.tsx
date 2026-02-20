@@ -30,11 +30,11 @@ export default function Filters({
                     fetchOptions={async (search) => {
                         const { data: options } = await axios.post(route('anggota.list'), { id: data.anggota, search });
                         if (!options.find((d: any) => d.value === data.anggota) && search !== '') {
-                            setData((prev: any) => ({ ...prev, anggota: '' }));
+                            setData((prev: any) => ({ ...prev, anggota: '', namaAnggota: '' }));
                         }
                         return options;
                     }}
-                    onSelect={(value, label) => {setData((prev: any) => ({ ...prev, anggota: value })); setAnggota(label)}}
+                    onSelect={(value, label) => {setData((prev: any) => ({ ...prev, anggota: value, namaAnggota:label })); setAnggota(label)}}
                     search={anggota}
                     setSearch={setAnggota}
                 />

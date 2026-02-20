@@ -22,9 +22,15 @@ class SetoranRepository
 {
     public function dataTabungan($request)
     {
-        $tabungan = TSimpanan::with(['SProdSimpanan', 'TTransSimpanan' => function ($query) {
-            $query->select('id', 'simpanan_id', 'tgl_trans', 'nominal');
-        }])
+        $tabungan = TSimpanan::with([
+            'SProdSimpanan',
+            'TTransSimpanan' => function ($query) {
+                $query->select('id', 'simpanan_id', 'tgl_trans', 'nominal');
+            },
+            'TTransTarik' => function ($query) {
+                $query->select('id', 'simpanan_id', 'tgl_trans', 'nominal');
+            }
+        ])
             ->select('id', 's_prod_simpanan_id', 'no_rekening', 'anggota_id')
             ->where('anggota_id', $request->id)
             ->latest()
@@ -49,7 +55,7 @@ class SetoranRepository
         ]);
     }
 
-    public function setoranBaru($request)
+    public function setoranAtauTarik($request)
     {
         try {
             DB::transaction(function () use ($request) {
@@ -60,28 +66,28 @@ class SetoranRepository
                 $simpanan = TSimpanan::findOrFail($request->jenisTabungan);
 
                 $pengaturanAkun = SPenganturanAkun::where([
-                    'kode_trans' => '01',
+                    'kode_trans' => $request->tipe === 'setoran' ? '01' : '02',
                     's_prod_id' => $simpanan->s_prod_simpanan_id
                 ])->get();
 
                 if ($pengaturanAkun->isEmpty()) {
                     throw new \Exception('Pengaturan akun tidak ditemukan untuk produk simpanan ini.');
                 }
-
+                $keterangan = $request->tipe === 'setoran' ? 'Setoran  tanggal ' . $tanggal : 'Tarik  tanggal ' . $tanggal;
                 $TTransSimpanan = TTransSimpanan::create([
                     'simpanan_id' => $request->jenisTabungan,
-                    'kode_trans' => '01',
+                    'kode_trans' => $request->tipe === 'setoran' ? '01' : '02',
                     'tgl_trans' => $tanggal,
-                    'jenis_trans' => '01',
+                    'jenis_trans' => $request->tipe === 'setoran' ? '01' : '02',
                     'nominal' => $request->nominal,
-                    'keterangan' => 'Setoran tanggal ' . $tanggal,
+                    'keterangan' => $keterangan,
                 ]);
 
                 $TransMaster = TTransMaster::create([
                     'module_source' => 'simpanan',
                     'trans_id' => $TTransSimpanan->id,
                     'tgl_trans' => $tanggal,
-                    'keterangan' => 'Setoran tanggal ' . $tanggal,
+                    'keterangan' => $keterangan,
                 ]);
 
                 foreach ($pengaturanAkun as $value) {
@@ -91,7 +97,7 @@ class SetoranRepository
                         'akun_id' => $value->debet_akun_id,
                         'debet' => $request->nominal,
                         'kredit' => 0,
-                        'keterangan' => 'Setoran tanggal ' . $tanggal,
+                        'keterangan' => $keterangan,
                     ]);
 
                     // Kredit
@@ -100,7 +106,7 @@ class SetoranRepository
                         'akun_id' => $value->kredit_akun_id,
                         'debet' => 0,
                         'kredit' => $request->nominal,
-                        'keterangan' => 'Setoran tanggal ' . $tanggal,
+                        'keterangan' => $keterangan,
                     ]);
                 }
             });

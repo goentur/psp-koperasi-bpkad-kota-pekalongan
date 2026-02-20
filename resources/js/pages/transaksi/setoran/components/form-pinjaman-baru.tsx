@@ -31,7 +31,7 @@ export default function FormPinjamanBaru({ open, setOpen, onChange, model}: prop
     const formRefs = useRef<Record<string, HTMLInputElement | null>>({})
     const handleForm = (e: React.FormEvent) => {
         e.preventDefault()
-        post(route('transaksi.setoran.pinjaman-baru'), {
+        post(route('transaksi.pinjaman-baru'), {
             preserveScroll: true,
             onSuccess: (e) => {
                 clearErrors()

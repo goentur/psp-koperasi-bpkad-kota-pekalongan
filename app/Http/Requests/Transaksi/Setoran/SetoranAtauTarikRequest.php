@@ -2,12 +2,9 @@
 
 namespace App\Http\Requests\Transaksi\Setoran;
 
-use App\Models\Anggota;
-use App\Models\JenisTabungan;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class SetoranBaruRequest extends FormRequest
+class SetoranAtauTarikRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,6 +24,7 @@ class SetoranBaruRequest extends FormRequest
         return [
             'anggota' => 'required',
             'jenisTabungan' => 'required',
+            'tipe' => 'required|in:setoran,tarik',
             'tanggal' => 'required|date',
             'nominal' => 'required|numeric',
         ];

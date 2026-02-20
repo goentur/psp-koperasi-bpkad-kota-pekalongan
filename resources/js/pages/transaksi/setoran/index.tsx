@@ -19,16 +19,16 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
     {
         title: 'Transaksi',
-        href: 'transaksi.setoran.index',
+        href: 'transaksi.index',
     },
     {
         title: 'Tabungan',
-        href: 'transaksi.setoran.index',
+        href: 'transaksi.index',
     },
 ];
 
 export default function Index({ gate }: IndexGate) {
-    const title = 'Setoran'
+    const title = 'Transaksi'
     const [dataTabungan, setDataTabungan] = useState<[]>([])
     const [loadingDataTabungan, setLoadingDataTabungan] = useState(false)
     const [formTabungan, setFormTabungan] = useState(false)
@@ -38,12 +38,13 @@ export default function Index({ gate }: IndexGate) {
     const [formPinjaman, setFormPinjaman] = useState(false)
     const [formAngsuran, setFormAngsuran] = useState(false)
 
-    const { data, setData } = useForm()
-
+    const { data, setData } = useForm({
+        anggota : ''
+    })
     const getDataTabungan = async () => {
         setLoadingDataTabungan(true)
         try {
-            const response = await axios.post(route('transaksi.setoran.data-tabungan'), {id: data.anggota})
+            const response = await axios.post(route('transaksi.data-tabungan'), {id: data.anggota})
             setDataTabungan(response.data)
         } catch (error: any) {
             alertApp(error.message, 'error')
@@ -54,7 +55,7 @@ export default function Index({ gate }: IndexGate) {
     const getDataPinjaman = async () => {
         setLoadingDataPinjaman(true)
         try {
-            const response = await axios.post(route('transaksi.setoran.data-pinjaman'), {id: data.anggota})
+            const response = await axios.post(route('transaksi.data-pinjaman'), {id: data.anggota})
             setDataPinjaman(response.data)
         } catch (error: any) {
             alertApp(error.message, 'error')
@@ -67,8 +68,8 @@ export default function Index({ gate }: IndexGate) {
         getDataTabungan()
         getDataPinjaman()
     }
-    const handleSetoranBaru = (e:number) => {
-        setData((prev: any) => ({ ...prev, jenisTabungan: e }))
+    const handleSetoranBaru = (e:any) => {
+        setData((prev: any) => ({ ...prev, jenisTabungan: e.jenis_tabungan, namaTabungan: e.tabungan, nominalTabungan : e.nominal, tanggalTerakhir : e.last_transaction_date, minimumStoran:e.nominal_standar }))
         setFormSetoran(true)
     }
     const handleAngsuran = (e:number) => {
@@ -97,7 +98,7 @@ export default function Index({ gate }: IndexGate) {
                                 <>
                                     {dataTabungan.map((value: any) => (
                                         <Card key={value.id} className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-md hover:shadow-xl cursor-pointer transition-all duration-300 transform hover:-translate-y-1"
-                                        onClick={() => gate.update && handleSetoranBaru(value.jenis_tabungan)}
+                                        onClick={() => gate.update && handleSetoranBaru(value)}
                                         >
                                             <CardHeader>
                                                 <CardTitle className="text-lg text-gray-800 dark:text-gray-100">

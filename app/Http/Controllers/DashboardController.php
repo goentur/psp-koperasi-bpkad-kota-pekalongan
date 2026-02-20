@@ -17,21 +17,23 @@ class DashboardController extends Controller
     }
     public function dataAnggotaDashboard()
     {
-        $anggotaDenganTotalSimpanan = SAnggota::with(['TSimpanan.TTransSimpanan', 'TPinjaman', 'TPinjaman.TTransPinjaman', 'satuanKerja'])
+        $anggotaDenganTotalSimpanan = SAnggota::with(['TSimpanan.TTransSimpanan', 'TSimpanan.TTransTarik', 'TPinjaman', 'TPinjaman.TTransPinjaman', 'satuanKerja'])
             ->orderBy('bidang')
             ->orderBy('nama')
             ->get()
             ->map(function ($anggota) {
-                $totalNominal = 0;
+                $totalSimpanan = 0;
+                $totalTarik = 0;
                 foreach ($anggota->TSimpanan as $simpanan) {
-                    $totalNominal += $simpanan->TTransSimpanan->sum('nominal');
+                    $totalSimpanan += $simpanan->TTransSimpanan->sum('nominal');
+                    $totalTarik += $simpanan->TTransTarik->sum('nominal');
                 }
                 $totalNominalPinjaman = $anggota->TPinjaman->sum('plafon');
                 $totalNominalPinjamanAngsuran = 0;
                 foreach ($anggota->TPinjaman as $pinjaman) {
                     $totalNominalPinjamanAngsuran += $pinjaman->TTransPinjaman->sum('nominal');
                 }
-                $anggota->total_simpanan_all = Helpers::ribuan($totalNominal);
+                $anggota->total_simpanan_all = Helpers::ribuan($totalSimpanan - $totalTarik);
                 $anggota->total_pinjaman_all = Helpers::ribuan($totalNominalPinjaman - $totalNominalPinjamanAngsuran);
                 return $anggota;
             });

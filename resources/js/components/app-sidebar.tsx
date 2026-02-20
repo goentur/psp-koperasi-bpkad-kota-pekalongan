@@ -61,10 +61,10 @@ const master: NavItem[] = [
 
 const transaksi: NavItem[] = [
     {
-        title: 'Setoran',
-        href: 'transaksi.setoran.index',
+        title: 'Transaksi',
+        href: 'transaksi.index',
         icon: DollarSign,
-        permission: 'transaksi-setoran-index'
+        permission: 'transaksi-index'
     }
 ];
 
