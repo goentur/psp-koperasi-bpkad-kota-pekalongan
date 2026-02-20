@@ -17,7 +17,7 @@ class DashboardController extends Controller
     }
     public function dataAnggotaDashboard()
     {
-        $anggotaDenganTotalSimpanan = SAnggota::with(['TSimpanan.TTransSimpanan', 'TPinjaman', 'TPinjaman.TTransPinjaman', 'TPinjaman.TTransPinjamanSaldoAwal', 'satuanKerja']) // Eager load relasi
+        $anggotaDenganTotalSimpanan = SAnggota::with(['TSimpanan.TTransSimpanan', 'TPinjaman', 'TPinjaman.TTransPinjaman', 'satuanKerja'])
             ->orderBy('bidang')
             ->orderBy('nama')
             ->get()
@@ -26,11 +26,10 @@ class DashboardController extends Controller
                 foreach ($anggota->TSimpanan as $simpanan) {
                     $totalNominal += $simpanan->TTransSimpanan->sum('nominal');
                 }
-                $totalNominalPinjaman = 0;
+                $totalNominalPinjaman = $anggota->TPinjaman->sum('plafon');
                 $totalNominalPinjamanAngsuran = 0;
-                foreach ($anggota->TPinjaman as $simpanan) {
-                    $totalNominalPinjamanAngsuran += $simpanan->TTransPinjaman->sum('nominal');
-                    $totalNominalPinjaman = $simpanan->TTransPinjamanSaldoAwal->sum('nominal');
+                foreach ($anggota->TPinjaman as $pinjaman) {
+                    $totalNominalPinjamanAngsuran += $pinjaman->TTransPinjaman->sum('nominal');
                 }
                 $anggota->total_simpanan_all = Helpers::ribuan($totalNominal);
                 $anggota->total_pinjaman_all = Helpers::ribuan($totalNominalPinjaman - $totalNominalPinjamanAngsuran);
