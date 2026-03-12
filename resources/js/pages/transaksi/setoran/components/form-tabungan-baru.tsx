@@ -68,23 +68,23 @@ export default function FormTabunganBaru({ open, setOpen, onChange, model}: prop
                         <DialogDescription className='italic'>"Silakan isi formulir di bawah ini dengan lengkap dan benar"</DialogDescription>
                     </DialogHeader>
                     <div className="mt-5 mb-2">
-                        <ComboboxDinamis
-                            label="jenisTabungan"
-                            selectedValue={data.jenisTabungan}
-                            fetchOptions={async (search) => {
-                                const { data: options } = await axios.post(route('jenis-tabungan.list'), {id: data.jenisTabungan,search});
-                                if (!options.find((d: any) => d.value === data.jenisTabungan) && search !== '') {
-                                    setData((prev: any) => ({ ...prev, jenisTabungan: '' }));
-                                }
-                                return options;
-                            }}
-                            onSelect={(value, label) => {setData((prev: any) => ({ ...prev, jenisTabungan: value })); setJenisTabungan(label)}}
-                            search={jenisTabungan}
-                            setSearch={setJenisTabungan}
-                            error={errors.jenisTabungan}
-                            className="mt-2"
-                        />
                         <div className="grid grid-cols-2 gap-2 mt-2">
+                            <ComboboxDinamis
+                                label="jenisTabungan"
+                                selectedValue={data.jenisTabungan}
+                                fetchOptions={async (search) => {
+                                    const { data: options } = await axios.post(route('jenis-tabungan.list'), {id: data.jenisTabungan,search});
+                                    if (!options.find((d: any) => d.value === data.jenisTabungan) && search !== '') {
+                                        setData((prev: any) => ({ ...prev, jenisTabungan: '' }));
+                                    }
+                                    return options;
+                                }}
+                                onSelect={(value, label) => {setData((prev: any) => ({ ...prev, jenisTabungan: value })); setJenisTabungan(label)}}
+                                search={jenisTabungan}
+                                setSearch={setJenisTabungan}
+                                error={errors.jenisTabungan}
+                                className="mt-2"
+                            />
                             <FormCalendar
                                 id="tanggalPendaftaran"
                                 value={data.tanggalPendaftaran}
@@ -95,17 +95,6 @@ export default function FormTabunganBaru({ open, setOpen, onChange, model}: prop
                                 required
                                 autoComplete='off'
                                 tanggalSelanjutnya={false}
-                            />
-                            <FormInputCurrency
-                                id="nominal"
-                                type="text"
-                                value={data.nominal}
-                                onChange={(value, floatValue) => setData((prevData: any) => ({ ...prevData, nominal: floatValue }))}
-                                inputRef={(el) => {if (formRefs.current) {formRefs.current['nominal'] = el}}}
-                                placeholder="Masukkan nominal"
-                                error={errors.nominal}
-                                autoComplete='off'
-                                required
                             />
                         </div>
                     </div>

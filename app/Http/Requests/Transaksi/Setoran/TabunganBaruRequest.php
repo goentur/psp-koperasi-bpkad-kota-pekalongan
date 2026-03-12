@@ -4,6 +4,8 @@ namespace App\Http\Requests\Transaksi\Setoran;
 
 use App\Models\Anggota;
 use App\Models\JenisTabungan;
+use App\Models\New\SAnggota;
+use App\Models\New\SProdSimpanan;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -25,10 +27,9 @@ class TabunganBaruRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'anggota' => 'required|' . Rule::exists(Anggota::class, 'id'),
-            'jenisTabungan' => 'required|' . Rule::exists(JenisTabungan::class, 'id'),
+            'anggota' => 'required|' . Rule::exists(SAnggota::class, 'id'),
+            'jenisTabungan' => 'required|' . Rule::exists(SProdSimpanan::class, 'id'),
             'tanggalPendaftaran' => 'required|date',
-            'nominal' => 'required|numeric',
         ];
     }
 }

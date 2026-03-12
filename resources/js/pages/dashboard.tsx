@@ -16,7 +16,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function Dashboard() {
+export default function Dashboard({prodSimpanan}:any) {
     const [loadingDataDashboard, setLoadingDataDashboard] = useState(false)
     const [loadingDataAnggota, setLoadingDataAnggota] = useState(false)
     const [dataAnggota, setDataAnggota] = useState<[]>([])
@@ -42,6 +42,7 @@ export default function Dashboard() {
         try {
             const response = await axios.post(route('data-anggota-dashboard'))
             setDataAnggota(response.data)
+            console.log(response.data)
         } catch (error: any) {
             alertApp(error.message, 'error')
         } finally {
@@ -52,6 +53,7 @@ export default function Dashboard() {
         getDataDashboard()
         getDataAnggota()
     },[])
+    const totalColumns = 5 + prodSimpanan.length;
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
@@ -111,36 +113,57 @@ export default function Dashboard() {
                     </div>
                 </div>
                 <div className="border-sidebar-border/70 dark:border-sidebar-border relative min-h-[100vh] flex-1 overflow-hidden rounded-xl border md:min-h-min">
-                <table className="w-full text-left border-collapse border">
-                    <thead>
-                        <tr className="uppercase text-sm leading-normal">
-                            <th className="p-2 border w-[1px]">NO</th>
-                            <th className="p-2 border">NIK</th>
-                            <th className="p-2 border">NAMA</th>
-                            <th className="p-2 border">BIDANG</th>
-                            <th className="p-2 border w-1">SIMPANAN</th>
-                            <th className="p-2 border w-1">PINJAMAN</th>
-                        </tr>
-                    </thead>
-                    <tbody className="font-light">
-                        {loadingDataAnggota && <LoadingData colSpan={5}/>}
-                        {dataAnggota.length > 0 ? (
-                            dataAnggota.map((value: any, index: number) => (
-                                <tr
-                                    key={index}
-                                    className="hover:bg-gray-100 dark:hover:bg-slate-900 align-text-top"
-                                >
-                                    <td className="px-2 py-1 border text-center">{++index}</td>
-                                    <td className="px-2 py-1 w-1 border">{value?.nik}</td>
-                                    <td className="px-2 py-1 border">{value?.nama}</td>
-                                    <td className="px-2 py-1 border">{value?.satuan_kerja?.nama}</td>
-                                    <td className="px-2 py-1 border text-end">{value?.total_simpanan_all}</td>
-                                    <td className="px-2 py-1 border text-end">{value?.total_pinjaman_all}</td>
-                                </tr>
-                            ))
-                        ) : (!loadingDataAnggota ?<NoData colSpan={5}/>: null)}
-                    </tbody>
-                </table>
+                    <table className="w-full text-left border-collapse border">
+                        <thead>
+                            <tr className="uppercase text-sm leading-normal">
+                                <th className="p-2 border w-1">NO</th>
+                                <th className="p-2 border">NIK</th>
+                                <th className="p-2 border">NAMA</th>
+                                <th className="p-2 border">BIDANG</th>
+                                {prodSimpanan.length > 0 ? (
+                                    prodSimpanan.map((prod:any) => (
+                                        <th key={prod.id} className="p-2 border">
+                                            {prod.nama}
+                                        </th>
+                                    ))
+                                ) : null}
+                                <th className="p-2 border">PINJAMAN</th>
+                            </tr>
+                        </thead>
+                        <tbody className="font-light">
+                            {loadingDataAnggota && <LoadingData colSpan={totalColumns} />}
+                            {!loadingDataAnggota && dataAnggota.length > 0 ? (
+                                dataAnggota.map((value: any, index: number) => (
+                                    <tr
+                                        key={value.id || index}
+                                        className="hover:bg-gray-100 dark:hover:bg-slate-900 align-text-top"
+                                    >
+                                        <td className="px-2 py-1 border text-center">{index + 1}</td>
+                                        <td className="px-2 py-1 w-1 border content-center">{value?.nik}</td>
+                                        <td className="px-2 py-1 border content-center">{value?.nama}</td>
+                                        <td className="px-2 py-1 border content-center">{value?.satuan_kerja?.nama}</td>
+                                        {prodSimpanan.length > 0 ? (
+                                            prodSimpanan.map((prodSim:any) => {
+                                                const detail = value.detail_simpanan?.find(
+                                                    (d: any) => d.jenis === prodSim.id
+                                                );
+                                                return (
+                                                    <td key={prodSim.id} className="px-2 py-1 border text-end">
+                                                        <span className='font-semibold'>{detail ? detail.saldo : null}</span>
+                                                        <br className='m-0 p-0' />
+                                                        <span className='text-xs'>{detail ? detail.tanggal : null}</span>
+                                                    </td>
+                                                );
+                                            })
+                                        ) : null}
+                                        <td className="px-2 py-1 border text-end content-center">{value?.total_pinjaman_all}</td>
+                                    </tr>
+                                ))
+                            ) : (
+                                !loadingDataAnggota && <NoData colSpan={totalColumns} />
+                            )}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </AppLayout>

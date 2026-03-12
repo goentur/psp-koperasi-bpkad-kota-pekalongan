@@ -41,17 +41,15 @@ class SetoranRepository
 
     public function tabunganBaru($request)
     {
-        $tabungan = Tabungan::select('id')->where(['anggota_id' => $request->anggota, 'jenis_tabungan_id' => $request->jenisTabungan])->first();
+        $tabungan = TSimpanan::select('id')->where(['anggota_id' => $request->anggota, 's_prod_simpanan_id' => $request->jenisTabungan])->first();
 
         if ($tabungan) {
             return back()->withErrors(['jenisTabungan' => 'Tabungan untuk jenis ini sudah ada.']);
         }
-        return null;
-        return Tabungan::create([
+        return TSimpanan::create([
             'anggota_id' => $request->anggota,
-            'jenis_tabungan_id' => $request->jenisTabungan,
-            'nominal' => $request->nominal,
-            'tanggal_pendaftaran' => $request->tanggalPendaftaran,
+            's_prod_simpanan_id' => $request->jenisTabungan,
+            'tgl_daftar' => $request->tanggalPendaftaran,
         ]);
     }
 

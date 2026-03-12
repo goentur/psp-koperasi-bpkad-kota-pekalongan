@@ -4,6 +4,7 @@ namespace App\Repositories\Master;
 
 use App\Http\Resources\Common\SelectOptionResource;
 use App\Models\JenisTabungan;
+use App\Models\New\SProdSimpanan;
 use Illuminate\Support\Facades\DB;
 
 class JenisTabunganRepository
@@ -61,7 +62,7 @@ class JenisTabunganRepository
 
     public function list($request)
     {
-        $query = $this->model::select('id', 'nama');
+        $query = SProdSimpanan::select('id', 'nama');
         if ($request->id && $request->search == '') {
             $data = $query->where('id', $request->id)->get();
         } elseif ($request->search) {

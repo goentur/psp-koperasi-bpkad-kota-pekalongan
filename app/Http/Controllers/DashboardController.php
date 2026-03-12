@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\New\SAnggota;
+use App\Models\New\SProdSimpanan;
 use App\Models\New\TTransDetail;
 use App\Support\Facades\Helpers;
 use Illuminate\Http\Request;
@@ -13,30 +14,80 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        return inertia('dashboard');
+        $prodSimpanan = SProdSimpanan::orderBy('id')->get();
+        return inertia('dashboard', compact('prodSimpanan'));
     }
     public function dataAnggotaDashboard()
     {
-        $anggotaDenganTotalSimpanan = SAnggota::with(['TSimpanan.TTransSimpanan', 'TSimpanan.TTransTarik', 'TPinjaman', 'TPinjaman.TTransPinjaman', 'satuanKerja'])
+        $anggotaDenganTotalSimpanan = SAnggota::with([
+            'TSimpanan.TTransSimpanan',
+            'TSimpanan.TTransTarik',
+            'TPinjaman',
+            'TPinjaman.TTransPinjaman',
+            'satuanKerja'
+        ])
             ->orderBy('bidang')
             ->orderBy('nama')
             ->get()
             ->map(function ($anggota) {
-                $totalSimpanan = 0;
-                $totalTarik = 0;
-                foreach ($anggota->TSimpanan as $simpanan) {
-                    $totalSimpanan += $simpanan->TTransSimpanan->sum('nominal');
-                    $totalTarik += $simpanan->TTransTarik->sum('nominal');
+                $groupedSimpanan = $anggota->TSimpanan->groupBy('s_prod_simpanan_id');
+
+                $detailSimpanan = [];
+                $grandTotalSimpanan = 0;
+                $grandTotalTarik = 0;
+
+                foreach ($groupedSimpanan as $jenis => $simpananItems) {
+                    $totalSimpananPerJenis = 0;
+                    $totalTarikPerJenis = 0;
+                    $tanggalTerakhirSetor = null;
+
+                    foreach ($simpananItems as $simpanan) {
+                        $masuk = $simpanan->TTransSimpanan->sum('nominal');
+                        $keluar = $simpanan->TTransTarik->sum('nominal');
+
+                        $totalSimpananPerJenis += $masuk;
+                        $totalTarikPerJenis += $keluar;
+
+                        $allTransactions = $simpanan->TTransSimpanan->merge($simpanan->TTransTarik);
+
+                        if ($allTransactions->isNotEmpty()) {
+                            $latestDate = $allTransactions->max('tgl_trans');
+                            if (!$tanggalTerakhirSetor || $latestDate > $tanggalTerakhirSetor) {
+                                $tanggalTerakhirSetor = $latestDate;
+                            }
+                        }
+                    }
+
+                    $saldoPerJenis = $totalSimpananPerJenis - $totalTarikPerJenis;
+                    $tanggalFormatted = $tanggalTerakhirSetor
+                        ? \Carbon\Carbon::parse($tanggalTerakhirSetor)->format('d M Y')
+                        : '-';
+
+                    $detailSimpanan[] = [
+                        'jenis' => $jenis,
+                        'tanggal' => $tanggalFormatted,
+                        'masuk' => Helpers::ribuan($totalSimpananPerJenis),
+                        'tarik' => Helpers::ribuan($totalTarikPerJenis),
+                        'saldo' => Helpers::ribuan($saldoPerJenis),
+                    ];
+
+                    $grandTotalSimpanan += $totalSimpananPerJenis;
+                    $grandTotalTarik += $totalTarikPerJenis;
                 }
+
                 $totalNominalPinjaman = $anggota->TPinjaman->sum('plafon');
                 $totalNominalPinjamanAngsuran = 0;
                 foreach ($anggota->TPinjaman as $pinjaman) {
                     $totalNominalPinjamanAngsuran += $pinjaman->TTransPinjaman->sum('nominal');
                 }
-                $anggota->total_simpanan_all = Helpers::ribuan($totalSimpanan - $totalTarik);
+
+                $anggota->detail_simpanan = $detailSimpanan;
+                $anggota->total_simpanan_all = Helpers::ribuan($grandTotalSimpanan - $grandTotalTarik);
                 $anggota->total_pinjaman_all = Helpers::ribuan($totalNominalPinjaman - $totalNominalPinjamanAngsuran);
+
                 return $anggota;
             });
+
         return response()->json($anggotaDenganTotalSimpanan);
     }
     public function dataDashboard()
