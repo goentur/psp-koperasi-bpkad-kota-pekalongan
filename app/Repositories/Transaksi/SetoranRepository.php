@@ -33,7 +33,7 @@ class SetoranRepository
         ])
             ->select('id', 's_prod_simpanan_id', 'no_rekening', 'anggota_id')
             ->where('anggota_id', $request->id)
-            ->latest()
+            ->orderBy('s_prod_simpanan_id', 'asc')
             ->get();
 
         return TabunganDataResource::collection($tabungan);
