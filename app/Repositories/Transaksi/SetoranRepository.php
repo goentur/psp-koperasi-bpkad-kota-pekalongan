@@ -79,6 +79,7 @@ class SetoranRepository
                     'jenis_trans' => $request->tipe === 'setoran' ? '01' : '02',
                     'nominal' => $request->nominal,
                     'keterangan' => $keterangan,
+                    'status' => 'menunggu',
                 ]);
 
                 $TransMaster = TTransMaster::create([
@@ -160,6 +161,7 @@ class SetoranRepository
                     'jenis_trans' => '01',
                     'nominal' => $request->nominal,
                     'keterangan' => 'Angsuran tanggal ' . $tanggal,
+                    'status' => 'menunggu',
                 ]);
 
                 $TransMaster = TTransMaster::create([
