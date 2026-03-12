@@ -77,13 +77,16 @@ class DashboardController extends Controller
 
                 $totalNominalPinjaman = $anggota->TPinjaman->sum('plafon');
                 $totalNominalPinjamanAngsuran = 0;
+                $tanggalTerakhirSetorPinjaman = null;
                 foreach ($anggota->TPinjaman as $pinjaman) {
                     $totalNominalPinjamanAngsuran += $pinjaman->TTransPinjaman->sum('nominal');
+                    $tanggalTerakhirSetorPinjaman = $pinjaman->TTransPinjaman->max('tgl_trans');
                 }
 
                 $anggota->detail_simpanan = $detailSimpanan;
                 $anggota->total_simpanan_all = Helpers::ribuan($grandTotalSimpanan - $grandTotalTarik);
                 $anggota->total_pinjaman_all = Helpers::ribuan($totalNominalPinjaman - $totalNominalPinjamanAngsuran);
+                $anggota->tanggal_terakhir_pinjaman = $tanggalTerakhirSetorPinjaman ? \Carbon\Carbon::parse($tanggalTerakhirSetorPinjaman)->format('d M Y') : '-';
 
                 return $anggota;
             });

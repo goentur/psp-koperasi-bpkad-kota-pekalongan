@@ -138,7 +138,7 @@ export default function Dashboard({prodSimpanan}:any) {
                                         key={value.id || index}
                                         className="hover:bg-gray-100 dark:hover:bg-slate-900 align-text-top"
                                     >
-                                        <td className="px-2 py-1 border text-center">{index + 1}</td>
+                                        <td className="px-2 py-1 border text-center content-center">{index + 1}</td>
                                         <td className="px-2 py-1 w-1 border content-center">{value?.nik}</td>
                                         <td className="px-2 py-1 border content-center">{value?.nama}</td>
                                         <td className="px-2 py-1 border content-center">{value?.satuan_kerja?.nama}</td>
@@ -156,7 +156,13 @@ export default function Dashboard({prodSimpanan}:any) {
                                                 );
                                             })
                                         ) : null}
-                                        <td className="px-2 py-1 border text-end content-center">{value?.total_pinjaman_all}</td>
+                                        <td className="px-2 py-1 border text-end content-center">
+                                            {value?.total_pinjaman_all !== '0' ? <>
+                                                <span className='font-semibold'>{value?.total_pinjaman_all}</span>
+                                                <br className='m-0 p-0' />
+                                                <span className='text-xs'>{value?.tanggal_terakhir_pinjaman}</span>
+                                            </>: null }
+                                        </td>
                                     </tr>
                                 ))
                             ) : (
