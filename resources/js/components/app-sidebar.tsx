@@ -4,7 +4,7 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { Building2, ContactRound, CreditCard, DollarSign, HandCoins, Key, LayoutGrid, UserRoundCog, Users, WalletMinimal } from 'lucide-react';
+import { Building2, Check, ContactRound, CreditCard, DollarSign, HandCoins, Key, LayoutGrid, UserRoundCog, Users, WalletMinimal } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -65,7 +65,24 @@ const transaksi: NavItem[] = [
         href: 'transaksi.index',
         icon: DollarSign,
         permission: 'transaksi-index'
-    }
+    },
+    {
+        title: 'Persetujuan',
+        href: '#',
+        icon: Check,
+        items: [
+            {
+                title: 'Simpanan',
+                href: 'transaksi.persetujuanSimpanan',
+                permission: 'transaksi-persetujuan',
+            },
+            {
+                title: 'Anguran',
+                href: 'transaksi.persetujuanAngsuran',
+                permission: 'transaksi-persetujuan',
+            },
+        ]
+    },
 ];
 
 const footerNavItems: NavItem[] = [

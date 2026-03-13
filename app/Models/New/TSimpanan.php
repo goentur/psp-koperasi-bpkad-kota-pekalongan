@@ -14,16 +14,21 @@ class TSimpanan extends Model
 
     public function TTransSimpanan()
     {
-        return $this->hasMany(TTransSimpanan::class, 'simpanan_id', 'id')->whereIn('jenis_trans', ['01', '03', '05', '07', '09']);
+        return $this->hasMany(TTransSimpanan::class, 'simpanan_id', 'id')->where('status', 'terima')->whereIn('jenis_trans', ['01', '03', '05', '07', '09']);
     }
 
     public function TTransTarik()
     {
-        return $this->hasMany(TTransSimpanan::class, 'simpanan_id', 'id')->whereIn('jenis_trans', ['02', '04', '06', '08']);
+        return $this->hasMany(TTransSimpanan::class, 'simpanan_id', 'id')->where('status', 'terima')->whereIn('jenis_trans', ['02', '04', '06', '08']);
     }
 
     public function SProdSimpanan()
     {
         return $this->belongsTo(SProdSimpanan::class, 's_prod_simpanan_id', 'id');
+    }
+
+    public function SAnggota()
+    {
+        return $this->belongsTo(SAnggota::class, 'anggota_id', 'id');
     }
 }

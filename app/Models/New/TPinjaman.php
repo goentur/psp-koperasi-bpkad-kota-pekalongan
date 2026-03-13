@@ -20,4 +20,14 @@ class TPinjaman extends Model
     {
         return $this->hasMany(TTransPinjaman::class, 'pinjaman_id', 'id')->whereIn('kode_trans', ['23', '21']);
     }
+
+    public function SProdPinjaman()
+    {
+        return $this->belongsTo(SProdPinjaman::class, 's_prod_pinjaman_id', 'id');
+    }
+
+    public function SAnggota()
+    {
+        return $this->belongsTo(SAnggota::class, 'anggota_id', 'id');
+    }
 }
